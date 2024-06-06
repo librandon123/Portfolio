@@ -1,0 +1,224 @@
+First Recorded Attempt: 29/50
+
+Second Recorded Attempt: 31
+Negative Values often not correctly assigned, many values taking diluted over basic (as evidenced by 0.01-0.03 differences)
+
+Mismatch found: 0000046080-20-000050.html - Output: nan, Correct: -0.51
+Mismatch found: 0000875320-20-000014.html - Output: 2.29, Correct: 2.32
+Mismatch found: 0000939057-20-000186.html - Output: nan, Correct: 0.61
+Mismatch found: 0001104659-20-052683.html - Output: nan, Correct: -0.42
+Mismatch found: 0001104659-20-053534.html - Output: nan, Correct: 0.67
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001157523-20-000599.html - Output: 0.56, Correct: 0.57
+Mismatch found: 0001193125-20-124288.html - Output: nan, Correct: 2.01
+Mismatch found: 0001193125-20-126089.html - Output: 1.4, Correct: 1.41
+Mismatch found: 0001193125-20-126683.html - Output: 1.51, Correct: 1.52
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.94
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019442.html - Output: 0.99, Correct: 1.0
+Mismatch found: 0001564590-20-019760.html - Output: nan, Correct: -2.21
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001691303-20-000019.html - Output: 0.39, Correct: 0.42
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: -0.59, Correct: -0.05
+
+
+Third Attempt: 33
+patterns = {
+        'basic': re.compile(r'(\$(\d+\.\d+)\s+)?(Basic\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share\s*(?![^\s])Basic', re.I),
+        'diluted': re.compile(r'(\$(\d+\.\d+)\s+)?(Diluted\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share.*?Diluted', re.I),
+        'gaap': re.compile(r'(\$(\d+\.\d+)\s+)?(Unadjusted\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share\s*(?![^\s])Unadjusted', re.I),
+        'non_gaap': re.compile(r'Adjusted\s+(?:earnings|net income|net earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share.*?Adjusted', re.I),
+        'loss': re.compile(r'(\$(\d+\.\d+)\s+)?(\((Loss)\)\s+earnings\s+per\s+share)|(?:\(net\)\s+)?Loss\s+per\s+(?:common\s+)?share', re.I),
+    }
+
+Results: Mismatch found: 0000046080-20-000050.html - Output: nan, Correct: -0.51
+Mismatch found: 0000875320-20-000014.html - Output: 2.29, Correct: 2.32
+Mismatch found: 0000939057-20-000186.html - Output: nan, Correct: 0.61
+Mismatch found: 0001104659-20-053534.html - Output: nan, Correct: 0.67
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001157523-20-000599.html - Output: 0.56, Correct: 0.57
+Mismatch found: 0001193125-20-124288.html - Output: nan, Correct: 2.01
+Mismatch found: 0001193125-20-126089.html - Output: 1.4, Correct: 1.41
+Mismatch found: 0001193125-20-126683.html - Output: 1.51, Correct: 1.52
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.94
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019442.html - Output: 0.99, Correct: 1.0
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001691303-20-000019.html - Output: 0.39, Correct: 0.42
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: -0.59, Correct: -0.05
+Total files: 50, Correctly matched EPS: 33, Accuracy: 66.00%
+
+Fourth Attempt: 39
+Made the end of the pattern a little more flexible, allowed colon
+patterns = {
+        'basic': re.compile(r'(\$(\d+\.\d+)\s+)?(Basic\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share\s*:?\s*Basic', re.I),
+        'diluted': re.compile(r'(\$(\d+\.\d+)\s+)?(Diluted\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share.*?Diluted', re.I),
+        'gaap': re.compile(r'(\$(\d+\.\d+)\s+)?(Unadjusted\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share\s*(?![^\s])Unadjusted', re.I),
+        'non_gaap': re.compile(r'Adjusted\s+(?:earnings|net income|net earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share.*?Adjusted', re.I),
+        'loss': re.compile(r'(\$(\d+\.\d+)\s+)?(\((Loss)\)\s+earnings\s+per\s+share)|(?:\(net\)\s+)?Loss\s+per\s+(?:common\s+)?share', re.I),
+    }
+
+Mismatch found: 0001104659-20-053534.html - Output: nan, Correct: 0.67
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.94
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019396.html - Output: 3.15, Correct: -3.15
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001691303-20-000019.html - Output: 0.39, Correct: 0.42
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: 0.05, Correct: -0.05
+Total files: 50, Correctly matched EPS: 39, Accuracy: 78.00%
+
+Fifth Attempt: 39
+Added (and diluted): 'basic': re.compile(r'(\$(\d+\.\d+)\s+)?(Basic\s+(?:and diluted\s+)?(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share\s*:?\s*Basic', re.I)
+
+Mismatch found: 0001104659-20-053534.html - Output: nan, Correct: 0.67
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.94
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019396.html - Output: 3.15, Correct: -3.15
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: 0.05, Correct: -0.05
+Total files: 50, Correctly matched EPS: 39, Accuracy: 78.00%
+
+Sixth Attempt: 40
+Prioritized Loss over Basic
+Mismatch found: 0001104659-20-053534.html - Output: nan, Correct: 0.67
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.94
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019726.html - Output: -0.26, Correct: 0.08
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: -0.59, Correct: -0.05
+Total files: 50, Correctly matched EPS: 40, Accuracy: 80.00%
+
+Seventh Attempt: 40
+Went back to 5th and added /* for parenthesis checking
+Mismatch found: 0001104659-20-053534.html - Output: nan, Correct: 0.67
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.94
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: 0.05, Correct: -0.05
+Total files: 50, Correctly matched EPS: 40, Accuracy: 80.00%
+
+8th: 41 
+Added optional (attributable to)
+Mismatch found: 0001104659-20-053534.html - Output: nan, Correct: 0.67
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: 6.25, Correct: -0.05
+Total files: 50, Correctly matched EPS: 41, Accuracy: 82.00%
+
+9th: 42
+Added spaces between attributable and to
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001373715-20-000098.html - Output: 0.8804, Correct: 0.25
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001720635-20-000018.html - Output: nan, Correct: 0.11
+Mismatch found: 0001722482-20-000089.html - Output: 6.25, Correct: -0.05
+Total files: 50, Correctly matched EPS: 42, Accuracy: 84.00%
+
+10th: 43
+Added ordinary shares as an option alongside common shares
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001289945-20-000036.html - Output: nan, Correct: -0.24
+Mismatch found: 0001373715-20-000098.html - Output: 0.8804, Correct: 0.25
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001722482-20-000089.html - Output: 6.25, Correct: -0.05
+Total files: 50, Correctly matched EPS: 43, Accuracy: 86.00%
+
+11th: 44
+Allowed (loss) to come before income instead
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001373715-20-000098.html - Output: 0.8804, Correct: 0.25
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Mismatch found: 0001722482-20-000089.html - Output: 6.25, Correct: -0.05
+Total files: 50, Correctly matched EPS: 44, Accuracy: 88.00%
+
+Code: 
+    patterns = {
+        'basic': re.compile(r'(\$(\d+\.\d+)\s+)?(Basic\s+(?:and diluted\s+)?(?:GAAP\s+)?(Earnings|Net\s+(?:\(loss\)\s+)?Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(common|ordinary)?\s*share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common|ordinary)?\s*share(?:.*?attributable\s*to.*?)?\s*:?\s*Basic', re.I),
+        'diluted': re.compile(r'(\$(\d+\.\d+)\s+)?(Diluted\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share.*?Diluted', re.I),
+        'gaap': re.compile(r'(\$(\d+\.\d+)\s+)?(Unadjusted\s+(Earnings|Net\s+Income|Net\s+Earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share)|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share\s*(?![^\s])Unadjusted', re.I),
+        'non_gaap': re.compile(r'Adjusted\s+(?:earnings|net income|net earnings)\s+(?:\(loss\)\s+)?per\s+(?:common\s+)?share|(Earnings|Net\s+Income|Net\s+Earnings)\s+(\(loss\)\s+)?per\s+(common\s+)?share.*?Adjusted', re.I),
+        'loss': re.compile(r'(\$(\d+\.\d+)\s+)?(\((Loss)\)\s+earnings\s+per\s+share)|(?:\(net\)\s+)?Loss\s+per\s+(?:common\s+)?share', re.I)
+    }
+   number_match = re.search(r'(\()?(\d+\.\d+)\s*(\))?', text_slice)
+            
+12th: 44
+Realized two of my 'correct_eps' were incorrect, and fixed greedy matching issues, as well as fixing negative value logic for basic matches
+
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.92
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Mismatch found: 0001576427-20-000032.html - Output: 0.62, Correct: 0.3
+Total files: 50, Correctly matched EPS: 44, Accuracy: 88.00%
+
+13th: 45
+Allowed for 'allocated to' alongside 'attributed to'
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.92
+Mismatch found: 0001373715-20-000098.html - Output: nan, Correct: 0.25
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Total files: 50, Correctly matched EPS: 45, Accuracy: 90.00%
+
+14th: 46
+Allowed for dashes on top of colons for basic matches
+Mismatch found: 0001104659-20-053563.html - Output: nan, Correct: 3.17
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.92
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Total files: 50, Correctly matched EPS: 46, Accuracy: 92.00%
+
+15th: 47
+Accomodated use of Em dash instead of Hyphen-Minus
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.92
+Mismatch found: 0001564590-20-019421.html - Output: 0.01, Correct: -0.24
+Total files: 50, Correctly matched EPS: 47, Accuracy: 94.00%
+
+16th: 48
+Added Restriction pattern to prevent lengthy captures in basic pattern, added negative lookbehind assertion for non-GAAP
+New Basic: 'basic': re.compile(rf'(?<!non-GAAP\s)(\$(\d+\.\d+)\s+)?(Basic\s+(?:and diluted\s+)?(?:GAAP\s+)?(Earnings|Net\s+(?:\(loss\)\s+)?Income|Net\s+Earnings|Income)\s+(?:\(loss\)\s+)?per\s+(common|ordinary)?\s*share)|(Earnings|Net\s+Income|Net\s+Earnings|Income|Loss)\s+(\(loss\)\s+)?(attributable\s*to {restriction_pattern}|allocated\s*to {restriction_pattern})?per\s+(common|ordinary)?\s*share\s*(attributable\s*to {restriction_pattern}|allocated\s*to {restriction_pattern})?\s*(:|-|—)?\s*Basic', re.I),
+
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Mismatch found: 0001299709-20-000078.html - Output: nan, Correct: 0.92
+Total files: 50, Correctly matched EPS: 48, Accuracy: 96.00%
+
+17th: 49
+Removed non-gaap category and accounted for if per common share appears first
+Mismatch found: 0001140361-20-010070.html - Output: 0.43, Correct: 0.38
+Total files: 50, Correctly matched EPS: 49, Accuracy: 98.00%
